@@ -61,5 +61,4 @@ CREATE TABLE IF NOT EXISTS "Usuario" (
 	PRIMARY KEY("id_usuario" AUTOINCREMENT)
 );
 
-INSERT INTO "Usuario" VALUES (1,'admin','admin@epp.com','1234','admin','activo');
 COMMIT;
