@@ -43,7 +43,8 @@ def consultar_stock_actual(id_epp):
         resultado = cursor.fetchone()
         return resultado["cantidad_disponible"] if resultado else 0
 
-def obtener_stock_critico(limite=5):
+
+def obtener_stock_critico(limite):
     """Retorna los productos que tienen menos unidades que el límite."""
     query = """
         SELECT e.nombre_epp, i.cantidad_disponible 

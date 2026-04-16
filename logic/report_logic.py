@@ -3,6 +3,7 @@ import csv
 import matplotlib.pyplot as plt
 from database.connection import obtener_conexion
 from matplotlib.ticker import MaxNLocator
+import codecs
 
 
 def obtener_datos_consumo_por_epp():
@@ -88,21 +89,24 @@ def obtener_historial_avanzado(nombre="", documento="", mes="", anio=""):
 def exportar_a_csv(datos, nombre_archivo="reporte_entregas.csv"):
     """Exporta los datos de la tabla de historial a un archivo CSV compatible con Excel."""
     try:
-        with open(nombre_archivo, mode="w", newline="", encoding="utf-8-sig") as f:
-            escritor = csv.writer(
-                f, delimiter=";"
-            )  # Usamos ; para que Excel lo abra bien directo
+        with open(nombre_archivo, mode="w", newline="", encoding="latin-1") as f:
+            # --- LA MEJORA DE BUENA PRÁCTICA ---
+            f.write("sep=;\n")
+
+            escritor = csv.writer(f, delimiter=";")
+
             # Cabeceras
-            escritor.writerow(
-                [
-                    "Fecha",
-                    "Documento",
-                    "Empleado",
-                    "Elemento",
-                    "Cantidad",
-                    "Observaciones",
-                ]
-            )
+            escritores_cabeceras = [
+                "Fecha",
+                "Documento",
+                "Empleado",
+                "Elemento",
+                "Cantidad",
+                "Observaciones",
+            ]
+            escritor.writerow(escritores_cabeceras)
+
+            # Datos
             for d in datos:
                 escritor.writerow(
                     [
@@ -114,9 +118,15 @@ def exportar_a_csv(datos, nombre_archivo="reporte_entregas.csv"):
                         d["observaciones"],
                     ]
                 )
+
         return True, f"Reporte guardado como {nombre_archivo}"
     except Exception as e:
-        return False, f"Error al exportar: {e}"
+        print(f"Error técnico en exportación: {e}")
+        return (
+            False,
+            "Error al exportar: No se pudo escribir el archivo."
+            "Verifique que no esté abierto en otro programa.",
+        )
 
 
 def obtener_top_empleados():

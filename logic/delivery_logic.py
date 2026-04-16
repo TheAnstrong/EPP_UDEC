@@ -12,16 +12,14 @@ def registrar_entrega_completa(id_empleado, id_usuario, lista_productos, observa
     try:
         with obtener_conexion() as db:
             cursor = db.cursor()
-            
             # --- PASO 1: VALIDAR STOCK TOTAL ANTES DE EMPEZAR ---
             for id_epp, cantidad in lista_productos:
                 cursor.execute("""
-                    SELECT i.cantidad_disponible, e.nombre_epp 
-                    FROM Inventario i 
-                    JOIN Elemento_EPP e ON i.id_epp = e.id_epp 
+                    SELECT i.cantidad_disponible, e.nombre_epp
+                    FROM Inventario i
+                    JOIN Elemento_EPP e ON i.id_epp = e.id_epp
                     WHERE i.id_epp = ?""", (id_epp,))
                 res = cursor.fetchone()
-                
                 if not res:
                     return False, "Producto no encontrado."
                 if res['cantidad_disponible'] < cantidad:
