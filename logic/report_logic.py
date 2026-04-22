@@ -61,9 +61,10 @@ def obtener_historial_avanzado(nombre="", documento="", mes="", anio=""):
     """
     params = []
 
-    if nombre:
-        query += " AND (emp.nombre LIKE ? OR emp.apellido LIKE ?)"
-        params.extend([f"%{nombre}%", f"%{nombre}%"])
+if nombre:
+        limpio = " ".join(nombre.split())
+        query += " AND (emp.nombre || ' ' || emp.apellido LIKE ?)"
+        params.append(f"%{limpio}%")
 
     if documento:
         query += " AND emp.documento LIKE ?"
